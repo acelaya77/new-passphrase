@@ -12,7 +12,7 @@ $modules_path = Switch ( $PSVersionTable.PSEdition ){
 }
 $my_path = (join-Path $modules_path "New-Passphrase")
 
-git clone git@github.com:acelaya77/passphrase.git $my_path
+git clone https://github.com/acelaya77/passphrase.git $my_path
 
     ```
 
