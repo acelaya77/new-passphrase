@@ -7,8 +7,8 @@
 ```powershell
 
 $modules_path = Switch ( $PSVersionTable.PSEdition ){
-   { $_ -match "Core" }{ (join-Path $([system.environment]::GetFolderpath("MyDocuments")) "Powershell") }
-   Default { (join-Path $([system.environment]::GetFolderpath("MyDocuments")) "WindowsPowershell") }
+    { $_ -match "Core" }{ (join-Path $([system.environment]::GetFolderpath("MyDocuments"))\Powershell" "Modules") }
+    Default { (join-Path $([system.environment]::GetFolderpath("MyDocuments"))\WindowsPowershell" "Modules") }
 }
 $my_path = (join-Path $modules_path "New-Passphrase")
 
