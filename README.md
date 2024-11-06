@@ -4,7 +4,7 @@
 
 <details><summary> Windows Install </summary>
 
-````powershell
+```powershell
 
 $modules_path = Switch ( $PSVersionTable.PSEdition ){
    { $_ -match "Core" }{ (join-Path $([system.environment]::GetFolderpath("MyDocuments")) "Powershell") }
@@ -14,7 +14,6 @@ $my_path = (join-Path $modules_path "New-Passphrase")
 
 git clone https://github.com/acelaya77/passphrase.git $my_path
 
-    ```
+```
 
 </details>
-````
