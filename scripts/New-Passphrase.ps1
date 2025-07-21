@@ -123,8 +123,8 @@ Function New-Passphrase {
 '@ -f '{', '}', $passwd, (Get-Date -f 's')
 
 
-    $r = Invoke-RestMethod -Method Post -Uri 'https://pwpush.com/p.json' -ContentType:'application/json' -Body:$payload
-    $url = 'https://pwpush.com/p/{0}' -f $r.url_token
+    $r = Invoke-RestMethod -Method Post -Uri 'https://us.pwpush.com/p.json' -ContentType:'application/json' -Body:$payload
+    $url = 'https://us.pwpush.com/p/{0}' -f $r.url_token
     $returnObject | Add-Member -NotePropertyName:'Url' -NotePropertyValue:$url
 
     $endVars = Get-Variable -Scope:Script | Select-Object -ExpandProperty Name | Where-Object{ $_ -notin $beginVars }
