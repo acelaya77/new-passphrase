@@ -92,20 +92,22 @@ Function New-Passphrase {
     Write-Verbose $('Word count: {0}, time: {1}' -f $($words.count), $stopWatch.Elapsed.ToString('mm\m\:ss\.ffff\s'))
     
     $punctuation = $(@('.', '?', '!') | Get-Random)
-    $space = (@(' ', '_','-') | Get-Random)
-    $numerals = ((0..665), (667..999) | Get-Random )
-    $word1 = $((Get-Culture).TextInfo.ToTitleCase($script:rndWords[0]))
-    $wordMiddle = $script:rndWords[1..($WordCount - 2)]
-    $wordLast = $($script:rndWords[$WordCount - 1])
-    $collection = @()
-    $collection += $word1
-    $collection += @($wordMiddle,$wordLast,$numerals) | Get-Random -Count:3
-    $strPassword = '{0}{1}' -f [string]::Join($space, $collection), $punctuation
-    $returnObject = $(ConvertTo-SecureString -Force -AsPlainText $strPassword) | ForEach-Object {
+    $space = (@(' ', '_', '-') | Get-Random)
+    $numerals1 = $(@((0..9999)) | Get-Random ).ToString('0000')
+    $numerals2 = $(@((0..9999)) | Get-Random ).ToString('0000')
+    $word1 = $((Get-Culture).TextInfo.ToTitleCase($($script:rndWords | Get-Random)))
+    $array = [System.Collections.Generic.List[string]]::new()
+    $($script:rndWords.where({ $_ -notmatch $word1 })).foreach({ $array.Add($_) })
+    $array.add($numerals1)
+    $array.add($numerals2)
+    $array = $array | Sort-Object { Get-Random }
+    $collection = '{0}{1}' -f [string]::Join($space, $($word1, [string]::Join($space, $array))), $punctuation
+    #$strPassword = '{0}{1}' -f [string]::Join($space, $collection), $punctuation
+    $returnObject = $(ConvertTo-SecureString -Force -AsPlainText $collection) | ForEach-Object {
         New-Object Object |
-        Add-Member -NotePropertyName:'AccountPassword' -NotePropertyValue:$_ -PassThru |
-        Add-Member -NotePropertyName:'PlainPassword' -NotePropertyValue:$strPassword -PassThru
-    }
+            Add-Member -NotePropertyName:'AccountPassword' -NotePropertyValue:$_ -PassThru |
+            Add-Member -NotePropertyName:'PlainPassword' -NotePropertyValue:$collection -PassThru
+        }
     
     $passwd = [System.Runtime.InteropServices.Marshal]::PtrToStringUni([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($ReturnObject.AccountPassword))
     $payload = @'
